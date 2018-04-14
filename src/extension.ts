@@ -26,13 +26,17 @@ export function activate(context: vscode.ExtensionContext) {
     let disposableStop = vscode.commands.registerCommand('extension.stopTimeSheet', () => {
         // The code you place here will be executed every time your command is executed
         // Display a message box to the user
-        vscode.window.showInformationMessage('Timesheet Timer Parou: ' + timer.fomated);
         timer.stop();
+        vscode.window.showInformationMessage('total em segundos: '+ timer.showTime);
         // StatusTimer.showTimer();s
     });
-
+    let disposablePause = vscode.commands.registerCommand('extension.pauseTimeSheet', () => {
+        timer.pause();
+        vscode.window.showInformationMessage('Timesheet pausada em:' + timer.fomated);
+    });
     context.subscriptions.push(disposableStart);
     context.subscriptions.push(disposableStop);
+    context.subscriptions.push(disposablePause);
 }
 
 // this method is called when your extension is deactivated
@@ -43,6 +47,7 @@ class StatusTimer {
     private seconds = 0;
     private minutes = 0;
     private hours = 0;
+    private total = 0;
     private interval: any;
     constructor(private statusBar: vscode.StatusBarItem) {
     }
@@ -66,10 +71,14 @@ class StatusTimer {
     }
     stop() {
         clearInterval(this.interval);
+        this.takeTime();
         this.seconds = 0;
         this.minutes = 0;
         this.hours = 0;
         this.statusBar.hide();
+    }
+    pause() {
+        clearInterval(this.interval);
     }
     get time(): {
         seconds: number;
@@ -87,4 +96,10 @@ class StatusTimer {
         (this.minutes ? this.minutes + ' minutos ' : '') +
         this.seconds + ' segundos ';
     }
+    takeTime() {
+        this.total = this.hours*3600 + this.minutes*60 + this.seconds;
+     }
+     get showTime() {
+         return this.total;
+     }
 }

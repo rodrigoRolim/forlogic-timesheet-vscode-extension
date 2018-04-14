@@ -24,6 +24,10 @@
             {
                 "command": "extension.stopTimeSheet",
                 "title": "Stop Timesheet"
+            },
+            {
+                "command": "extension.pauseTimeSheet",
+                "title": "Pause Timesheet"
             }
         ]
     },
